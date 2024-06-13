@@ -1,9 +1,10 @@
 import './App.css';
+import SnakeGame from './Components/SnakeGame/SnakeGame';
 
 function App() {
   return (
     <div className="App">
-      gf
+    <SnakeGame/>
     </div>
   );
 }
