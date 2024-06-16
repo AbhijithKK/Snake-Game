@@ -9,32 +9,36 @@ const SnakeGame = () => {
   const [intervalId, setIntervalId] = useState(null);
   const [foodX, SetFoodX] = useState(180);
   const [foodY, SetFoodY] = useState(180);
+  const [score,SetScore]=useState(0)
+  const [snakeTail,setTail]=useState([{x:80,y:80}])
   
   const ref = useRef();
 
   const Play = () => {
     isClose(false);
   };
-
+// console.log(snakeTail);
   useEffect(() => {
     // variable Declaration
     let context = ref.current.getContext("2d");
     context.moveTo(0, 0);
     context.lineTo(500, 500);
     context.stroke();
-
+    setTail([...snakeTail,{x:snakeX,y:snakeY}])
     // main game function
-    context.fillStyle = "black";
+    context.fillStyle = "black"; 
     context.fillRect(0, 0, 500, 500);
     // snake
     context.fillStyle = "yellow";
-    context.fillRect(snakeX, snakeY, 20, 20);
+    for (const tail of snakeTail) {
+      console.log(tail);
+      context.fillRect(tail.x, tail.y, 20, 20);
+    }
     // fruit
     context.fillStyle = "red";
     context.fillRect(foodX, foodY, 20, 20);
   }, [snakeX, snakeY, foodX, foodY]);
 
-const [score,SetScore]=useState(0)
 useEffect(()=>{
   if (foodX===snakeX&&foodY===snakeY) {
     SetScore((prev)=>prev+10)
