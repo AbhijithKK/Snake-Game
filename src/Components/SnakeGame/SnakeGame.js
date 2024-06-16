@@ -4,13 +4,12 @@ import Modal from "../Modal/Modal";
 
 const SnakeGame = () => {
   const [isOpen, isClose] = useState(true);
-  const [sposX, setSposX] = useState(80);
-  const [sposY, setSposY] = useState(80);
-  const [fposX, setFposX] = useState(180);
-  const [fposY, setFposY] = useState(180);
+  const [snakeX, setSnakeX] = useState(80);
+  const [snakeY, setSnakeY] = useState(80);
+  const [foodX, SetFoodX] = useState(180);
+  const [foodY, SetFoodY] = useState(180);
+  
   const ref = useRef();
-
-
 
   const Play = () => {
     isClose(false);
@@ -18,50 +17,43 @@ const SnakeGame = () => {
 
   useEffect(() => {
     // variable Declaration
-    
     let context = ref.current.getContext("2d");
     context.moveTo(0, 0);
     context.lineTo(500, 500);
     context.stroke();
 
-    // onload function
-    document.addEventListener("keydown", inputControl);
-    MainGame();
-
     // main game function
-    function MainGame() {
       context.fillStyle = "black";
       context.fillRect(0, 0, 500, 500);
       // snake
       context.fillStyle = "yellow";
-      context.fillRect(sposX, sposY, 20, 20);
+      context.fillRect(snakeX, snakeY, 20, 20);
       // fruit
       context.fillStyle = "red";
-      context.fillRect(fposX, fposY, 20, 20);
-    }
-    // input control
-    function inputControl(e) {
-        console.log(e.keyCode);
-      if (e.keyCode === 37) {
-        // left
-       
-        setSposX(sposX-20)
-
-      } else if (e.keyCode === 38) {
-        // up
-        setSposY(sposY-20)
-      } else if (e.keyCode === 39) {
-        // right
-        setSposX(sposX+20)
-      } else if (e.keyCode === 40) {
-        // down
-        setSposY(sposY+20)
+      context.fillRect(foodX, foodY, 20, 20);
+  }, [snakeX,snakeY,foodX,foodY]);
+ const [intervalId,setIntervalId]=useState(null)
+  useEffect(()=>{
+    document.addEventListener('keydown',InputCapture)
+    function InputCapture(e) {
+      if (intervalId) {
+        clearInterval(intervalId)
       }
+     let intervall= setInterval(() => { 
+        if (e.keyCode===37)  setSnakeX((prev)=>prev-20)
+        if (e.keyCode===38)  setSnakeY((prev)=>prev-20)
+        if (e.keyCode===39)  setSnakeX((prev)=>prev+20)
+        if (e.keyCode===40)  setSnakeY((prev)=>prev+20)
+        
+      },200);
+      setIntervalId(intervall)
     }
-    return () => {
-        document.removeEventListener('keydown', inputControl);
-    };
-  }, [sposX,sposY,fposX,fposY]);
+    return()=>{
+      document.removeEventListener('keydown',InputCapture)
+    }
+  },[intervalId])
+ 
+
   return (
     <>
       {isOpen && <Modal play={Play} />}
