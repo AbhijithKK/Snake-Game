@@ -34,10 +34,10 @@ const SnakeGame = () => {
     context.fillRect(foodX, foodY, 20, 20);
   }, [snakeX, snakeY, foodX, foodY]);
 
-
+const [score,SetScore]=useState(0)
 useEffect(()=>{
-  console.log(foodX,'----',snakeX);
   if (foodX===snakeX&&foodY===snakeY) {
+    SetScore((prev)=>prev+10)
     let X=Math.floor(Math.random()*20)*20 
     let Y=Math.floor(Math.random()*20)*20
     SetFoodX(X)
@@ -111,7 +111,7 @@ useEffect(()=>{
             <i>541655</i>
           </span>
         </h4>
-        <h4>Current Score:1251</h4>
+        <h4>Current Score:{score}</h4>
         <canvas ref={ref} width={500} height={500} className="canvas"></canvas>
       </div>
     </>
