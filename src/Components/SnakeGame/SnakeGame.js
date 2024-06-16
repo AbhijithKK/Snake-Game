@@ -6,9 +6,10 @@ const SnakeGame = () => {
   const [isOpen, isClose] = useState(true);
   const [snakeX, setSnakeX] = useState(80);
   const [snakeY, setSnakeY] = useState(80);
+  const [intervalId, setIntervalId] = useState(null);
   const [foodX, SetFoodX] = useState(180);
   const [foodY, SetFoodY] = useState(180);
-
+  
   const ref = useRef();
 
   const Play = () => {
@@ -32,7 +33,19 @@ const SnakeGame = () => {
     context.fillStyle = "red";
     context.fillRect(foodX, foodY, 20, 20);
   }, [snakeX, snakeY, foodX, foodY]);
-  const [intervalId, setIntervalId] = useState(null);
+
+
+useEffect(()=>{
+  console.log(foodX,'----',snakeX);
+  if (foodX===snakeX&&foodY===snakeY) {
+    let X=Math.floor(Math.random()*20)*20 
+    let Y=Math.floor(Math.random()*20)*20
+    SetFoodX(X)
+    SetFoodY(Y)
+  }
+},[snakeX,snakeY])
+
+
   useEffect(() => {
     document.addEventListener("keydown", InputCapture);
     function InputCapture(e) {
