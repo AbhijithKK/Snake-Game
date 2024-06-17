@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./SnakeGame.css";
 import Modal from "../Modal/Modal";
 
@@ -9,45 +9,64 @@ const SnakeGame = () => {
   const [intervalId, setIntervalId] = useState(null);
   const [foodX, SetFoodX] = useState(180);
   const [foodY, SetFoodY] = useState(180);
-  const [score,SetScore]=useState(0)
-  const [snakeTail,setTail]=useState([{x:80,y:80}])
-  
+  const [score, SetScore] = useState(0);
+  const [snLength, SetSnLength] = useState(1);
+  const [snakeTail, setTail] = useState([{ x: 80, y: 80 }]);
   const ref = useRef();
-
   const Play = () => {
     isClose(false);
   };
-// console.log(snakeTail);
+
   useEffect(() => {
     // variable Declaration
-    let context = ref.current.getContext("2d");
+   const  context = ref.current.getContext("2d");
     context.moveTo(0, 0);
     context.lineTo(500, 500);
     context.stroke();
-    setTail([...snakeTail,{x:snakeX,y:snakeY}])
+
     // main game function
-    context.fillStyle = "black"; 
+    context.fillStyle = "black";
     context.fillRect(0, 0, 500, 500);
     // snake
     context.fillStyle = "yellow";
     for (const tail of snakeTail) {
-      console.log(tail);
       context.fillRect(tail.x, tail.y, 20, 20);
+      while (snakeTail.length > snLength) {
+        snakeTail.shift();
+      }
     }
     // fruit
     context.fillStyle = "red";
     context.fillRect(foodX, foodY, 20, 20);
   }, [snakeX, snakeY, foodX, foodY]);
 
+
 useEffect(()=>{
-  if (foodX===snakeX&&foodY===snakeY) {
-    SetScore((prev)=>prev+10)
-    let X=Math.floor(Math.random()*20)*20 
-    let Y=Math.floor(Math.random()*20)*20
-    SetFoodX(X)
-    SetFoodY(Y)
-  }
+
+  setTail((prevTail) => {
+    const newTail = [...prevTail, { x: snakeX, y: snakeY }];
+    while (newTail.length > snLength) {
+      newTail.shift();
+    }
+    return newTail;
+  });
 },[snakeX,snakeY])
+
+// food section
+  useEffect(() => {
+    if (foodX === snakeX && foodY === snakeY) {
+      
+      SetSnLength((prev)=>prev+1);
+      SetScore((prev) => prev + 10);
+      let X = Math.floor(Math.random() * 20) * 20;
+      let Y = Math.floor(Math.random() * 20) * 20;
+      SetFoodX(X);
+      SetFoodY(Y);
+    }
+  }, [snakeX, snakeY]);
+
+
+
 
 
   useEffect(() => {
@@ -60,7 +79,7 @@ useEffect(()=>{
         if (e.keyCode === 37)
           setSnakeX((prev) => {
             if (prev < 0) {
-              prev = 500;
+              prev = 490;
             } else {
               prev -= 20;
             }
@@ -70,7 +89,7 @@ useEffect(()=>{
         if (e.keyCode === 38)
           setSnakeY((prev) => {
             if (prev < 0) {
-              prev = 500;
+              prev = 490;
             } else {
               prev -= 20;
             }
@@ -78,8 +97,8 @@ useEffect(()=>{
           });
         if (e.keyCode === 39)
           setSnakeX((prev) => {
-            if (prev > 500) {
-              prev =0;
+            if (prev > 490) {
+              prev = 0;
             } else {
               prev += 20;
             }
@@ -87,7 +106,7 @@ useEffect(()=>{
           });
         if (e.keyCode === 40)
           setSnakeY((prev) => {
-            if (prev > 500) {
+            if (prev > 490) {
               prev = 0;
             } else {
               prev += 20;
@@ -123,3 +142,8 @@ useEffect(()=>{
 };
 
 export default SnakeGame;
+
+
+
+
+
