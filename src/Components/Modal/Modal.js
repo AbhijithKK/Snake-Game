@@ -2,14 +2,12 @@ import ReactDom from 'react-dom'
 
 import './Modal.css'
 
-const Modal = ({probs,play}) => {
+const Modal = ({probs}) => {
     console.log(probs);
   return ReactDom.createPortal(
     <>
     <div className='modal-container'>
-       <div className="PlayBtn">
-        <button onClick={play}>Play Now</button>
-       </div>
+       {probs}
     </div>
     </>
 ,document.getElementById('Modal')
