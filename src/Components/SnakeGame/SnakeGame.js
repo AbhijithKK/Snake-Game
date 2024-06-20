@@ -3,9 +3,22 @@ import "./SnakeGame.css";
 import Modal from "../Modal/Modal";
 
 const SnakeGame = () => {
+  
   const [score, SetScore] = useState(0);
   const [keyCode, SetKeyCode] = useState(null);
+  const [isOpen, isClose] = useState(true);
+  const [gameoverModal, setGameOver] = useState(false);
+  const [snakeX, setSnakeX] = useState(80);
+  const [snakeY, setSnakeY] = useState(80);
+  const [intervalId, setIntervalId] = useState(null);
+  const [intervalId2, setIntervalId2] = useState(null);
+  const [foodX, SetFoodX] = useState(180);
+  const [foodY, SetFoodY] = useState(180);
+  const [snLength, SetSnLength] = useState(1);
+  const [snakeTail, setTail] = useState([{ x: 80, y: 80 }]);
+  const ref = useRef(null);
 
+  // modal functions and codes
   const Play = () => {
     isClose(false);
   };
@@ -26,23 +39,11 @@ const SnakeGame = () => {
       <button onClick={PlayAgain}>Play Again</button>
     </div>
   );
+// ========================================
 
-  const [isOpen, isClose] = useState(true);
-  const [gameoverModal, setGameOver] = useState(false);
-  const [snakeX, setSnakeX] = useState(80);
-  const [snakeY, setSnakeY] = useState(80);
-  const [intervalId, setIntervalId] = useState(null);
-  const [intervalId2, setIntervalId2] = useState(null);
-  const [foodX, SetFoodX] = useState(180);
-  const [foodY, SetFoodY] = useState(180);
-  const [snLength, SetSnLength] = useState(1);
-  const [snakeTail, setTail] = useState([{ x: 80, y: 80 }]);
-  const ref = useRef(null);
 
-  const [foodImg, setFoodImg] = useState(null);
-
+// canvas creation
   useEffect(() => {
-  
     // variable Declaration
     const context = ref.current.getContext("2d");
     context.moveTo(0, 0);
@@ -69,13 +70,13 @@ const SnakeGame = () => {
     );
 
     // fruit
-   
-      context.fillStyle = "red";
-      context.fillRect(foodX, foodY, 20, 20);
-    
-  }, [snakeX, snakeY, foodX, foodY, foodImg]);
+
+    context.fillStyle = "red";
+    context.fillRect(foodX, foodY, 20, 20);
+  }, [snakeX, snakeY, foodX, foodY]);
   // ==========================================================
 
+  // snake tail setting
   useEffect(() => {
     setTail((prevTail) => {
       const newTail = [...prevTail, { x: snakeX, y: snakeY }];
@@ -85,7 +86,7 @@ const SnakeGame = () => {
       return newTail;
     });
   }, [snakeX, snakeY]);
-// =================================================================
+  // =================================================================
   // food section
   useEffect(() => {
     if (foodX === snakeX && foodY === snakeY) {
@@ -110,7 +111,9 @@ const SnakeGame = () => {
       }
     }
   }, [snakeX, snakeY]);
-// ================================================================
+  // ================================================================
+
+  // snake direction
   useEffect(() => {
     document.addEventListener("keydown", InputCapture);
     if (gameoverModal) {
@@ -167,62 +170,63 @@ const SnakeGame = () => {
     };
   }, [intervalId, gameoverModal]);
   // =================================================
-  // buttons
-  useEffect(()=>{
+  //snake direction using buttons
+  useEffect(() => {
     if (intervalId2) {
-      clearInterval(intervalId2)
+      clearInterval(intervalId2);
     }
     function buttons(keyCodes) {
       console.log(keyCodes);
-      let intervall=setInterval(() => {
+      let intervall = setInterval(() => {
         if (keyCodes === 37)
-        setSnakeX((prev) => {
-          if (prev < 0) {
-            prev = 500;
-          } else {
-            prev -= 20;
-          }
-          return prev;
-        });
-  
-      if (keyCodes === 38)
-        setSnakeY((prev) => {
-          if (prev < 0) {
-            prev = 500;
-          } else {
-            prev -= 20;
-          }
-          return prev;
-        });
-      if (keyCodes === 39)
-        setSnakeX((prev) => {
-          if (prev > 500) {
-            prev = 0;
-          } else {
-            prev += 20;
-          }
-          return prev;
-        });
-      if (keyCodes === 40)
-        setSnakeY((prev) => {
-          if (prev > 500) {
-            prev = 0;
-          } else {
-            prev += 20;
-          }
-          return prev;
-        });
+          setSnakeX((prev) => {
+            if (prev < 0) {
+              prev = 500;
+            } else {
+              prev -= 20;
+            }
+            return prev;
+          });
+
+        if (keyCodes === 38)
+          setSnakeY((prev) => {
+            if (prev < 0) {
+              prev = 500;
+            } else {
+              prev -= 20;
+            }
+            return prev;
+          });
+        if (keyCodes === 39)
+          setSnakeX((prev) => {
+            if (prev > 500) {
+              prev = 0;
+            } else {
+              prev += 20;
+            }
+            return prev;
+          });
+        if (keyCodes === 40)
+          setSnakeY((prev) => {
+            if (prev > 500) {
+              prev = 0;
+            } else {
+              prev += 20;
+            }
+            return prev;
+          });
       }, 200);
-      setIntervalId2(intervall)
+      setIntervalId2(intervall);
     }
     if (keyCode) {
-      buttons(keyCode)
+      buttons(keyCode);
     }
     return () => {
       if (intervalId) {
         clearInterval(intervalId);
-      }}
-  },[keyCode])
+      }
+    };
+  }, [keyCode]);
 
   return (
     <>
@@ -240,17 +244,15 @@ const SnakeGame = () => {
       </div>
       <div className="buttons">
         <div className="row1">
-
-        <button onClick={() => SetKeyCode(38)}>up</button>
+          <button onClick={() => SetKeyCode(38)}>up</button>
         </div>
         <div className="row2">
-        <button onClick={() => SetKeyCode(37)}>left</button>
+          <button onClick={() => SetKeyCode(37)}>left</button>
 
-        <button onClick={() => SetKeyCode(39)}>right</button>
+          <button onClick={() => SetKeyCode(39)}>right</button>
         </div>
         <div className="row3">
-        <button onClick={() => SetKeyCode(40)}>down</button>
-
+          <button onClick={() => SetKeyCode(40)}>down</button>
         </div>
       </div>
     </>
