@@ -3,13 +3,15 @@ import "./SnakeGame.css";
 import Modal from "../Modal/Modal";
 
 const SnakeGame = () => {
+  const [score, SetScore] = useState(0);
+
   const Play = () => {
     isClose(false);
   };
   const PlayAgain = () => {
-    isClose(false);
-    window.location.reload()
-    setGameOver(false)
+    window.location.reload();
+    isClose(true);
+    setGameOver(false);
   };
   let gameStart = (
     <div className="PlayBtn">
@@ -17,12 +19,13 @@ const SnakeGame = () => {
     </div>
   );
   let gameOver = (
-    <div className="PlayBtn">
+    <div className="ply-container">
       <h1>Game Over</h1>
-
+    <h2>Your Score:{score}</h2>
       <button onClick={PlayAgain}>Play Again</button>
     </div>
   );
+
   const [isOpen, isClose] = useState(true);
   const [gameoverModal, setGameOver] = useState(false);
   const [snakeX, setSnakeX] = useState(80);
@@ -30,7 +33,6 @@ const SnakeGame = () => {
   const [intervalId, setIntervalId] = useState(null);
   const [foodX, SetFoodX] = useState(180);
   const [foodY, SetFoodY] = useState(180);
-  const [score, SetScore] = useState(0);
   const [snLength, SetSnLength] = useState(1);
   const [snakeTail, setTail] = useState([{ x: 80, y: 80 }]);
   const ref = useRef(null);
@@ -117,7 +119,7 @@ const SnakeGame = () => {
         snakeTail[0].x === snakeTail[i].x &&
         snakeTail[0].y === snakeTail[i].y
       ) {
-setGameOver(true)
+        setGameOver(true);
         break;
       }
     }
@@ -126,11 +128,9 @@ setGameOver(true)
   useEffect(() => {
     document.addEventListener("keydown", InputCapture);
     if (gameoverModal) {
-      InputCapture()
-
+      InputCapture();
     }
     function InputCapture(e) {
-      
       if (intervalId) {
         clearInterval(intervalId);
       }
@@ -172,14 +172,14 @@ setGameOver(true)
             }
             return prev;
           });
-      },200);
-      
+      }, 200);
+
       setIntervalId(intervall);
     }
     return () => {
       document.removeEventListener("keydown", InputCapture);
     };
-  }, [intervalId,gameoverModal]);
+  }, [intervalId, gameoverModal]);
 
   return (
     <>
@@ -189,13 +189,8 @@ setGameOver(true)
         <u>
           <h1>Snake Game</h1>
         </u>
-        {/* <h4>
-          High Score:
-          <span>
-            <i>541655</i>
-          </span>
-        </h4> */}
-        <h4>Current Score:{score}</h4>
+      
+        <h4 style={{textAlign:'center'}}>Current Score:<span style={{color:"blue"}}>{score}</span></h4>
         <canvas ref={ref} width={500} height={500} className="canvas"></canvas>
       </div>
     </>
