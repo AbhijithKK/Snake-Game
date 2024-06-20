@@ -4,6 +4,7 @@ import Modal from "../Modal/Modal";
 
 const SnakeGame = () => {
   const [score, SetScore] = useState(0);
+  const [keyCode, SetKeyCode] = useState(null);
 
   const Play = () => {
     isClose(false);
@@ -21,7 +22,7 @@ const SnakeGame = () => {
   let gameOver = (
     <div className="ply-container">
       <h1>Game Over</h1>
-    <h2>Your Score:{score}</h2>
+      <h2>Your Score:{score}</h2>
       <button onClick={PlayAgain}>Play Again</button>
     </div>
   );
@@ -31,6 +32,7 @@ const SnakeGame = () => {
   const [snakeX, setSnakeX] = useState(80);
   const [snakeY, setSnakeY] = useState(80);
   const [intervalId, setIntervalId] = useState(null);
+  const [intervalId2, setIntervalId2] = useState(null);
   const [foodX, SetFoodX] = useState(180);
   const [foodY, SetFoodY] = useState(180);
   const [snLength, SetSnLength] = useState(1);
@@ -40,22 +42,7 @@ const SnakeGame = () => {
   const [foodImg, setFoodImg] = useState(null);
 
   useEffect(() => {
-    // Create a new image and set its source
-  }, []);
-
-  useEffect(() => {
-    const img = new Image();
-    img.src = "../../assets/images/apple.png";
-    // Set the loaded image to state
-    img.onload = () => {
-      setFoodImg(img);
-    };
-
-    // Handle image loading errors
-    img.onerror = (err) => {
-      console.log(err);
-    };
-    // if (!foodImg) return;
+  
     // variable Declaration
     const context = ref.current.getContext("2d");
     context.moveTo(0, 0);
@@ -82,13 +69,12 @@ const SnakeGame = () => {
     );
 
     // fruit
-    if (!foodImg) {
+   
       context.fillStyle = "red";
       context.fillRect(foodX, foodY, 20, 20);
-    } else {
-      context.drawImage(foodImg, foodX, foodY);
-    }
+    
   }, [snakeX, snakeY, foodX, foodY, foodImg]);
+  // ==========================================================
 
   useEffect(() => {
     setTail((prevTail) => {
@@ -99,7 +85,7 @@ const SnakeGame = () => {
       return newTail;
     });
   }, [snakeX, snakeY]);
-
+// =================================================================
   // food section
   useEffect(() => {
     if (foodX === snakeX && foodY === snakeY) {
@@ -124,7 +110,7 @@ const SnakeGame = () => {
       }
     }
   }, [snakeX, snakeY]);
-
+// ================================================================
   useEffect(() => {
     document.addEventListener("keydown", InputCapture);
     if (gameoverModal) {
@@ -180,6 +166,63 @@ const SnakeGame = () => {
       document.removeEventListener("keydown", InputCapture);
     };
   }, [intervalId, gameoverModal]);
+  // =================================================
+  // buttons
+  useEffect(()=>{
+    if (intervalId2) {
+      clearInterval(intervalId2)
+    }
+    function buttons(keyCodes) {
+      console.log(keyCodes);
+      let intervall=setInterval(() => {
+        if (keyCodes === 37)
+        setSnakeX((prev) => {
+          if (prev < 0) {
+            prev = 500;
+          } else {
+            prev -= 20;
+          }
+          return prev;
+        });
+  
+      if (keyCodes === 38)
+        setSnakeY((prev) => {
+          if (prev < 0) {
+            prev = 500;
+          } else {
+            prev -= 20;
+          }
+          return prev;
+        });
+      if (keyCodes === 39)
+        setSnakeX((prev) => {
+          if (prev > 500) {
+            prev = 0;
+          } else {
+            prev += 20;
+          }
+          return prev;
+        });
+      if (keyCodes === 40)
+        setSnakeY((prev) => {
+          if (prev > 500) {
+            prev = 0;
+          } else {
+            prev += 20;
+          }
+          return prev;
+        });
+      }, 200);
+      setIntervalId2(intervall)
+    }
+    if (keyCode) {
+      buttons(keyCode)
+    }
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }}
+  },[keyCode])
 
   return (
     <>
@@ -189,9 +232,17 @@ const SnakeGame = () => {
         <u>
           <h1>Snake Game</h1>
         </u>
-      
-        <h4 style={{textAlign:'center'}}>Current Score:<span style={{color:"blue"}}>{score}</span></h4>
+
+        <h4 style={{ textAlign: "center" }}>
+          Current Score:<span style={{ color: "blue" }}>{score}</span>
+        </h4>
         <canvas ref={ref} width={500} height={500} className="canvas"></canvas>
+      </div>
+      <div className="buttons">
+        <button onClick={() => SetKeyCode(38)}>up</button>
+        <button onClick={() => SetKeyCode(37)}>left</button>
+        <button onClick={() => SetKeyCode(39)}>right</button>
+        <button onClick={() => SetKeyCode(40)}>down</button>
       </div>
     </>
   );

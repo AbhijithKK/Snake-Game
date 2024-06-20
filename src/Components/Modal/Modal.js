@@ -3,7 +3,6 @@ import ReactDom from 'react-dom'
 import './Modal.css'
 
 const Modal = ({probs}) => {
-    console.log(probs);
   return ReactDom.createPortal(
     <>
     <div className='modal-container'>
