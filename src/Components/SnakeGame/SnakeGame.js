@@ -176,7 +176,6 @@ const SnakeGame = () => {
       clearInterval(intervalId2);
     }
     function buttons(keyCodes) {
-      console.log(keyCodes);
       let intervall = setInterval(() => {
         if (keyCodes === 37)
           setSnakeX((prev) => {
