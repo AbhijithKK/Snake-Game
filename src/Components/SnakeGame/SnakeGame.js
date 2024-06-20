@@ -236,13 +236,22 @@ const SnakeGame = () => {
         <h4 style={{ textAlign: "center" }}>
           Current Score:<span style={{ color: "blue" }}>{score}</span>
         </h4>
-        <canvas ref={ref} width={500} height={500} className="canvas"></canvas>
+        <canvas ref={ref} width={400} height={400} className="canvas"></canvas>
       </div>
       <div className="buttons">
+        <div className="row1">
+
         <button onClick={() => SetKeyCode(38)}>up</button>
+        </div>
+        <div className="row2">
         <button onClick={() => SetKeyCode(37)}>left</button>
+
         <button onClick={() => SetKeyCode(39)}>right</button>
+        </div>
+        <div className="row3">
         <button onClick={() => SetKeyCode(40)}>down</button>
+
+        </div>
       </div>
     </>
   );

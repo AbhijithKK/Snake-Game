@@ -14,13 +14,31 @@ h1{
 }
 
 .buttons{
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: space-around;
 
+
 }
 .buttons button{
-    width: 150px;
-    height: 75px;
+    width: 100px;
+    height: 45px;
     cursor: pointer;
+    background-color: transparent;
+    color: blue;
+    border-radius: 8px;
+    border: 2px solid blue;
+}
+@media (max-width:450px) {
+    .buttons{
+        display: grid;
+        align-items: center;
+        justify-content: center;
+    
+    }
+    .row1,.row2,.row3{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
